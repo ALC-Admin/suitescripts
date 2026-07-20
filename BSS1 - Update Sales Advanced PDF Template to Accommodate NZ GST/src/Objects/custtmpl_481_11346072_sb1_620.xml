@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_481_11346072_sb1_620" standard="STDTMPLSALESORD">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>T</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>AL Sales Order FY 2025</title>
+  <trantype>SALESORD</trantype>
+</advancedpdftemplate>

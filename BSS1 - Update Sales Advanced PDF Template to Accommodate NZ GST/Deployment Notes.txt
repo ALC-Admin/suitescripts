@@ -1,0 +1,23 @@
+Steps to deploy:
+
+1.  Other Record Fields
+
+    Name:   NZ GST Registration Number
+    ID:     _cmc_nz_gst_reg_no
+    Type:   Free-form-text
+
+    Name:   NZ Account Number
+    ID:     _cmc_nz_acct_no
+    Type:   Free-form-text
+
+    Name:   NZ BIC/Swift Code
+    ID:     _cmc_nz_swift_code
+    Type:   Free-form-text
+
+2.  Update Advanced PDF Template
+
+    Name:   ALCQ Invoice PDF Template (Product)
+    ID:     327
+
+    Name:   AL Sales Order FY 2025
+    ID:     327

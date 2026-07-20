@@ -1,0 +1,10 @@
+<manifest projecttype="ACCOUNTCUSTOMIZATION">
+  <projectname>CMC_InvoiceTemplateUpdateNZ</projectname>
+  <frameworkversion>1.0</frameworkversion>
+  <dependencies>
+    <features>
+      <feature required="true">ADVANCEDPRINTING</feature>
+      <feature required="true">SALESORDERS</feature>
+    </features>
+  </dependencies>
+</manifest>

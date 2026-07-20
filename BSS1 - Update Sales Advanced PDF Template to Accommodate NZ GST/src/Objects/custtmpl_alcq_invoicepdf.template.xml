@@ -1,0 +1,363 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+
+<!-- 
+Combined form created for invoices for Alpha Lifecare and Care Quip;
+=====================================================
+Change logs...
+	
+	DATE		UPDATE BY			DETAILS
+	23-July-24	RAF					Creation
+	03-July-26	CARLO M			    Update to include GST registration number / Payment Details information for NZ invoices
+	06-July-26	CARLO M			    Added dynamic account number and swift code for NZ invoices
+	07-July-26	CARLO M			    Added bill to country to NZ validation
+    10-July-26  Mike W              Added gap between Despatch Method and Contact Email table to Invoice to and Deliver to table col 238, 241, and 243 & GST (NZ) line
+IDs...
+Alpha Lifecare = 34
+Care Quip = 33
+
+-->
+
+<pdf>
+<head>
+	<macrolist>
+		<macro id="nlheader">
+			<table class="top" style="width:100%">
+				<tr>
+					<td class="documentname" colspan="1" rowspan="1" style="width: 20%; line-height: 100%; height: 100%;">TAX INVOICE</td>
+					<td class="documentname" colspan="1" rowspan="1" style="width: 28%; line-height: 100%; height: 100%;">&nbsp;</td>
+					<td colspan="1" rowspan="4" style="width:4%;">&nbsp;</td>
+					<td colspan="1" rowspan="4" style="width: 20%;"><span class="paddingbold" style="font-size: 7pt;">${subsidiary.legalname}</span><br /><span class="padding" style="font-size: 6pt;">ABN ${subsidiary.federalidnumber}<#if record.currencysymbol == "NZD" && record.shipcountry == "NZ" && record.billcountry == "NZ"><br />NZ GST Registration Number : <br />${subsidiary.custrecord_cmc_nz_gst_reg_no}</#if><br /><br />${subsidiary.returnaddress_text}<br /><br />${subsidiary.custrecord_phone}<br />${subsidiary.email}</span></td>
+					<td colspan="1" rowspan="4" style="width: 28%;"><#if subsidiary.logo?length != 0 >
+							<img src="${subsidiary.logo@url}" class="logo" />
+						<#elseif companyInformation.logoUrl?length != 0 >
+							<img src="${companyInformation.logoUrl}" class="logo" />
+						</#if>
+                    </td>
+				</tr>
+				<tr style="padding-top: 15px;">
+					<td class="headernames"><span class="padding">INVOICE NUMBER</span></td>
+					<td class="headerdetails"><span class="padding">${record.tranid}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">INVOICE DATE</span></td>
+					<td class="headerdetails"><span class="padding">${record.trandate}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">CUSTOMER ORDER NO</span></td>
+					<td class="headerdetails"><span class="padding">${record.otherrefnum}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">TERMS / CURRENCY</span></td>
+					<td class="headerdetails"><span class="padding">${record.terms} / ${record.currency}</span></td>
+					<td>&nbsp;</td>
+					<td class="headernames"><span class="padding">SALES ORDER NO</span></td>
+					<td class="headerdetails"><span class="padding">${record.createdfrom.tranid}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">DUE DATE</span></td>
+					<td class="headerdetails"><span class="padding">${record.duedate}</span></td>
+					<td>&nbsp;</td>
+					<td class="headernames"><span class="padding">CON NOTE NO</span></td>
+					<td class="headerdetails"><span class="padding">${record.custbody_connote}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">ACCOUNT NUMBER</span></td>
+					<td class="headerdetails"><span class="padding">${record.entity.entityid}</span></td>
+					<td>&nbsp;</td>
+					<td class="headernames"><span class="padding">CONTACT</span></td>
+					<td class="headerdetails"><span class="padding">${record.salesrep}</span></td>
+				</tr>
+				<tr>
+					<td class="headernames"><span class="padding">DESPATCH METHOD</span></td>
+					<td class="headerdetails"><span class="padding">${record.shipmethod}</span></td>
+					<td>&nbsp;</td>
+					<td class="headernames"><span class="padding">CONTACT EMAIL</span></td>
+					<td class="headerdetails"><span class="padding">${record.salesrep.email}</span></td>
+				</tr></table>
+		</macro>
+		<macro id="nlfooter">
+			<table class="footer" style="width: 100%;">
+				<tr>
+					<td align="right">${subsidiary.legalname}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${record.tranid}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Page <pagenumber/> of <totalpages/></td>
+				</tr>
+			</table>
+		</macro>
+	</macrolist>
+    <style type="text/css">table {
+        <#if .locale == "zh_CN">font-family: stsong, sans-serif;
+        <#elseif .locale == "zh_TW">font-family: msung, sans-serif;
+        <#elseif .locale == "ja_JP">font-family: heiseimin, sans-serif;
+        <#elseif .locale == "ko_KR">font-family: hygothic, sans-serif;
+        <#elseif .locale == "ru_RU">font-family: lucida;
+        <#else>font-family: sans-serif;
+        </#if>
+            font-size: 8pt;
+        }
+        
+img.logo {
+	height: 25%;
+    Width: 25%;
+}
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            padding: 5px 6px 3px;
+            <#if subsidiary.id == "4" || subsidiary.id == "3" || subsidiary.id == "2">
+				background-color:rgb(237, 28, 36);
+				color:white;
+            <#elseif subsidiary.id == "6" || subsidiary.id == "7" || subsidiary.id == "10">
+				background-color:#1d1645;
+				color:white;
+			<#else></#if>
+            border-color: #f1f1f1;
+        }
+        td {
+           	padding: 4px 6px;
+            border-color: #333333;
+        }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+      	table.top{
+          	table-layout: fixed;
+        }
+      	td.documentname{
+          	font-size: 15pt;
+          	font-weight: bold;
+            <#if subsidiary.id == "4" || subsidiary.id == "3" || subsidiary.id == "2">
+				background-color:rgb(237, 28, 36);
+            <#elseif subsidiary.id == "6" || subsidiary.id == "7" || subsidiary.id == "10">
+				background-color:#1d1645;
+			<#else></#if>
+			color:white;
+        }
+      	td.headernames{
+          	font-weight: bold;
+          	font-size: 8pt;
+          	padding-top: 6px;
+            padding-bottom: 2px;
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-left-color: white;
+          	border-right-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+      	td.headerdetails{
+          	font-size: 8pt;
+          	padding-top: 6px;
+            padding-bottom: 2px;
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-right-color: white;
+          	border-left-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+        table.footer td {
+            padding: 0;
+            font-size: 8pt;
+        }
+        table.itemtable th {
+            padding-bottom: 10px;
+            padding-top: 10px;
+			border: 0.01px solid #9e9e9e;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.pmtmethod {
+            padding-top: 35px;
+            page-break-inside: avoid;
+        }
+		td.sectionhead {
+            font-weight: bold;
+            font-size: 8pt;
+            <#if subsidiary.id == "4" || subsidiary.id == "3" || subsidiary.id == "2">
+				background-color:rgb(237, 28, 36);
+				color:white;
+            <#elseif subsidiary.id == "6" || subsidiary.id == "7" || subsidiary.id == "10">
+				background-color:#1d1645;
+				color:white;
+			<#else></#if>
+            border-color: #f1f1f1;
+        }
+      	td.addressheader {
+            font-size: 8pt;
+            padding: 12px;
+            background-color: #f1f1f1;
+          	height: 95px;
+        }
+      	tr.itemline1{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	tr.itemline2{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	td.itemtable2{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	td.subtotal{
+          	border: 0.01px solid #9e9e9e;
+          	border-collapse: collapse;
+          	font-size: 8pt;
+        }
+		td.bankdetail1{
+			align: left;
+			padding-top: 1px;
+            padding-bottom: 1px;
+        }
+        span.itemname {
+            font-weight: bold;
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+      	span.padding{
+          	text-align: left;
+          	color:#4d4d4d;
+        }
+      	span.paddingbold{
+          	text-align: left;
+          	color:#4d4d4d;
+          	font-weight: bold;
+        }
+	</style>
+</head>
+
+<body header="nlheader" header-height="20%" footer="nlfooter" footer-height="12pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+  <div style="height: 10px;">&nbsp;</div>  
+  <table class="addressheader" style="width: 100%;">
+		<tr>
+			<td class="addressheader" colspan="1" rowspan="4" style="width: 48%;color:#4d4d4d;padding-top: 20px;"><span class="padding" style="font-weight: bold;">INVOICE TO</span><br /><span>${record.billaddress}</span></td>
+			<td colspan="1" rowspan="4" style="width: 4%;">&nbsp;</td>
+			<td class="addressheader" colspan="1" rowspan="4" style="width: 48%;color:#4d4d4d;padding-top: 20px;"><span class="padding" style="font-weight: bold;">DELIVER TO</span><br /><span><#if record.custbody43 = "Yes">${record.custbody_esm_r_booking.custrecord_able_booking_delilvery_addres} <#else>${record.shipaddress}<br/>${record.shipphone}<br/>${record.shippingaddress.custrecord577} </#if> </span></td>
+		</tr>
+	</table>
+
+<#if record.item?has_content>
+	<table style="width: 100%; padding-top: 10px;">
+		<!-- start items -->
+		<#list record.item as item>
+		<#if item_index==0>
+		<thead>
+			<tr class="itemline1">
+				<th class="itemtable1" line-height="150%" width="80px"><p align="center">CODE</p></th>
+				<th class="itemtable2" line-height="150%" width="210px"><p align="center">DESCRIPTION</p></th>
+				<th class="itemtable2" line-height="150%" width="75px"><p align="center">QTY ORDERED</p></th>
+				<th align="center" class="itemtable2" line-height="150%" width="70px"><p align="center">QTY INVOICE</p></th>
+				<th class="itemtable2" line-height="150%" width="70px"><p align="center">QTY <br /> B/O</p></th>
+				<th align="center" class="itemtable2" line-height="150%" width="70px"><p align="center">UNIT PRICE</p></th>
+				<th align="center" class="itemtable2" line-height="150%" width="70px"><p align="center"><#if record.currencysymbol == "NZD" && record.shipcountry == "NZ" && record.billcountry == "NZ">GST (NZ)<#else>GST</#if></p></th>
+				<th align="center" class="itemtable3" line-height="150%" width="100px"><p align="center">AMOUNT INC GST</p></th>
+			</tr>
+		</thead>
+		</#if>
+			<tr class="itemline2">
+				<td class="itemtable1" width="80px"><p align="center">
+					<#if item.itemtype = "ShipItem">Freight
+                    <#elseif item.item.internalid = "1381">Freight
+					<#elseif item.item.internalid = "1387">Freight
+					<#else>${item.custcol_itemname}				
+					</#if>
+				</p></td>
+				<td class="itemtable2" width="210px"><p align="left">
+					<#if item.itemtype == "ShipItem">${item.description}
+					<#elseif item.description?contains("Unfortunately Care Quip")>${item.description}
+					<#elseif item.description?contains("Care Quip unfortunately")>${item.description}
+					<#elseif item.item.internalid = "1381">Freight
+					<#elseif item.item.internalid = "1387">Freight
+					<#else>${item.description}
+					</#if>
+				</p></td>
+				<td class="itemtable2" width="75px"><p align="center"><#setting number_format=",##0">${item.custcol53} </p></td>
+				<td class="itemtable2" width="70px"><p align="center"><#setting number_format=",##0">${item.quantity} </p></td>
+				<td class="itemtable2" width="70px"><p align="center"><#setting number_format=",##0">
+                    <#if item.description?contains("Freight Charge")>0
+                    <#else>${item.quantityremaining}
+                    </#if>
+                </p></td>
+				<td class="itemtable2" width="70px"><p align="center"><#setting number_format=",##0.00">$${item.rate}</p></td>
+				<td class="itemtable2" width="70px"><p align="right"><#setting number_format=",##0.00">$${item.tax1amt}</p></td>
+				<td class="itemtable3" width="100px"><p align="right"><#setting number_format=",##0.00">$${item.grossamt}</p></td>
+			</tr>
+			</#list>
+			<!-- end items -->
+	</table>
+</#if>
+
+    <table class="pmtmethod" style="width:100%; table-layout: fixed;">
+        <tr>
+            <td class="sectionhead" style="width:48%;" colspan="2" rowspan="1">PAYMENT METHODS</td>
+            <td style="width:4%;" colspan="1" rowspan="1">&nbsp;</td>
+            <td class="sectionhead" style="width:48%;" colspan="2" rowspan="1">SUMMARY</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table style="width:100%">
+                    <tr style="padding-top: 5px;">
+                        <td><b>EFT and Direct Debit</b></td>
+                    </tr>
+                    <tr style="padding-top: 3px;">
+                        <td class="bankdetail1">ACCOUNT NAME : <b>${subsidiary.legalname}</b></td>
+                    </tr>
+                    <tr>
+                        <td class="bankdetail1">BSB : <#if record.currency != "US Dollar"><b>${subsidiary.custrecord_bsb}</b><#else><b>${subsidiary.custrecord_us_bsb}</b></#if></td>
+                    </tr>
+					<#if record.currencysymbol == "NZD" && record.shipcountry == "NZ" && record.billcountry == "NZ">
+						<tr>
+							<td class="bankdetail1">ACCOUNT NO: <b>${subsidiary.custrecord_cmc_nz_acct_no}</b></td>
+						</tr>
+						<tr>
+							<td class="bankdetail1">BIC/SWIFT Code: <b>${subsidiary.custrecord_cmc_nz_swift_code}</b></td>
+						</tr>
+                    <#else>
+						<tr>
+							<td class="bankdetail1">ACCOUNT NO : <#if record.currency != "US Dollar"><b>${subsidiary.custrecord_account}</b><#else><b>${subsidiary.custrecord_us_account}</b></#if></td>
+						</tr>
+                    </#if>
+                    <tr style="padding-top: 18px;">
+                        <#if subsidiary.id == "4" || subsidiary.id == "3" || subsidiary.id == "2"><td >We also accept Visa and MasterCard. No additional surcharges apply.</td>
+                        <#elseif subsidiary.id == "6" || subsidiary.id == "7" || subsidiary.id == "10"><td>A surcharge of 1% applies to all Visa and MasterCard payments.</td>
+                        <#else><td></td></#if>
+                    </tr>
+                </table>
+            </td>
+            <td colspan="1">&nbsp;</td>
+            <td colspan="2">
+                <table style="width:60%; table-layout: fixed; align: right;">
+                        <tr>
+                            <td align="right" class="subtotal"><p style="font-weight: bold;">SUB TOTAL:</p></td>
+                            <td align="right" class="subtotal">${record.subtotal}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="subtotal"><p style="font-weight: bold;">TAX TOTAL:</p></td>
+                            <td align="right" class="subtotal">${record.taxtotal}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="subtotal"><p style="font-weight: bold;">TOTAL:</p></td>
+                            <td align="right" class="subtotal">${record.total}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="subtotal"><p style="font-weight: bold;">AMOUNT DUE:</p></td>
+                            <td align="right" class="subtotal">${record.amountremaining}</td>
+                        </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5"><p style="padding-top: 10px; text-align: left;"><span style="font-family: sans-serif; font-size:8pt;">Thank you, we appreciate your business. All goods on this tax invoice remain the property of ${subsidiary.legalname} until payment is received in full. Requests for returns and credits must be made within 7 days of delivery. A restocking fee of 15% of order value or $35.00, whichever amount is greater will apply to all returns. Special non-stock orders and custom products are non-returnable. Copies of our Terms and Conditions are available on request.</span></p></td>
+        </tr>
+    </table>
+
+</body>
+</pdf>

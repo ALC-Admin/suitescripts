@@ -1,0 +1,12 @@
+<advancedpdftemplate scriptid="custtmpl_alcq_invoicepdf" standard="STDTMPLEMPTY">
+  <description>Template for PDF invoices of Alpha Lifecare and Care Quip. This template is for product related invoices.&#xd;
+&#xd;
+Creation Date: 23 - July - 24&#xd;
+Created By: RAF</description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>ALCQ Invoice PDF Template (Product)</title>
+  <trantype>CUSTINVC</trantype>
+</advancedpdftemplate>
