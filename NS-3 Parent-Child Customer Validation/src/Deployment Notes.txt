@@ -1,0 +1,17 @@
+Steps to deploy:
+
+1.  Entity Fields
+
+    Name:   Require Child Customer on Sales Transactions
+    ID:     _cmc_require_child_cust_sales
+    Type:   Checkbox
+
+2.  Workflows
+
+    Name:   CMC_WF_ParentValidationCust
+    ID:     _CMC_WF_ParentValidationcu
+    Type:   Customer
+
+    Name:   CMC_WF_ParentValidationSale
+    ID:     _CMC_WF_ParentValidationSa
+    Type:   SalesOrder
