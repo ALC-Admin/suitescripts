@@ -1,0 +1,45 @@
+Updated 15 Aug 2026 by CM Consulting - the location mapping previously
+hardcoded in the script is now held on the Location record.
+
+Steps to deploy:
+
+1.  Other Record Fields
+
+    Name:   Default Line Inventory Location
+    ID:     _cmc_default_line_inv_loc
+    Type:   List/Record - Location
+    Rec:    Location
+
+2.  Update Script
+
+    Name:   [MS] UE Default Line Inventory Location
+    ID:     customscript_ms_ue_dflt_line_inv_loc
+    Type:   User Event
+
+3.  Populate the field on the Location records (replaces the old hardcoded
+    map in the script). Locations not listed here are left blank, and lines
+    on those locations keep NetSuite's own default.
+
+    Location (internal id)  ->  Default Line Inventory Location (internal id)
+
+        23  ->  23
+        25  ->  25
+        28  ->  28
+        33  ->  33
+        35  ->  35
+        38  ->  38
+        43  ->  43
+        45  ->  45
+        48  ->  48
+        50  ->  50
+       103  ->  23
+       109  ->  28
+       116  ->  33
+       128  ->  43
+       134  ->  48
+       136  ->  50
+       203  ->  203
+       204  ->  203
+
+    NOTE: the self-mapping rows (23 -> 23, 25 -> 25, ...) must still be set
+    explicitly - the script does not fall back to the header location.
