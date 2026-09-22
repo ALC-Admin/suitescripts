@@ -26,25 +26,48 @@ define(
             let dateCreated = orderLines[0].dateCreated;
 
             let body = `
-            Sales Order: ${tranId}<br/>
-            Date Created: ${dateCreated}<br/><br/>
-            <table border cellpadding="2" cellspacing="2">
-                <tr>
-                    <th style="width: 200px">Item</th>
-                    <th style="width: 80px">Quantity</th>
-                    <th style="width: 80px">Fulfilled</th>
-                </tr>
+            <style>
+                :root { --border-color: #ddd; }
+                .email { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+                .email > .lbl { font-weight: 600; }
+                .email table {
+                    border: 1px solid var(--border-color);
+                    border-collapse: collapse;
+                }
+                .email table > thead > tr > th,
+                .email table > tbody > tr > td {
+                    border-collapse: collapse; border: 1px solid var(--border-color); padding: 0.25rem;
+                }
+                th.item, td.item { width: 100px; }
+                th.category, td.category { width: 200px; }
+                th.memo, td.memo { width: 300px; }
+                th.qty, td.qty { width: 80px; }
+            </style>
+            <div class="email">
+                <span class="lbl">Sales Order:</span> ${tranId}<br/>
+                <span class="lbl">Date Created:</span> ${dateCreated}<br/><br/>
+
+                <table cellspacing="0" cellpadding="0">
+                    <thead>
+                    <tr>
+                        <th class="item">Item</th>
+                        <th class="category">Category</th>
+                        <th class="memo">Memo</th>
+                        <th class="qty">Qty Fulfilled</th>
+                    </tr>
+                    </thead>
             `;
 
             orderLines.forEach(line => {
-                body += `<tr>
-                    <td>${line.item}</td>
-                    <td style="80px; text-align: center;">${line.inventory}</td>
-                    <td style="80px; text-align: center;">${line.fulfilled}</td>
-                </tr>`;
+                body += `<tbody><tr>
+                    <td class="item">${line.item}</td>
+                    <td class="category">${line.itemCategory}</td>
+                    <td class="memo">${line.memo}</td>
+                    <td class="qty">${line.fulfilled}</td>
+                </tr></tbody>`;
             });
 
-            body += '</table>';
+            body += '</table></div>';
             log.debug({ title: TITLE, details: body });
             return body;
         };
@@ -72,8 +95,11 @@ define(
                     fulfilled: parseInt(line.getValue(line.columns[2]) || '0'),
                     dateCreated: line.getValue(line.columns[3]),
                     item: line.getValue(line.columns[4]),
-                    tranId: line.getValue(line.columns[5])
+                    tranId: line.getValue(line.columns[6]),
+                    memo: line.getValue(line.columns[7]),
+                    itemCategory: line.getValue(line.columns[8])
                 });
+                log.debug({ title: TITLE, details: output[output.length - 1] });
             });
 
             return output;
