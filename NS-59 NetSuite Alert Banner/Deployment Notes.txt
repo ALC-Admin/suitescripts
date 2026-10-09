@@ -1,0 +1,13 @@
+Steps to deploy:
+
+1.  Item Fields
+
+    Name:   Pre-Check Required
+    ID:     custitem_cmc_pre_check_req
+    Type:   Checkbox
+
+2.  Scripts
+
+    Name:   CMC_UE_PreCheckRequirement
+    ID:     _CMC_UE_PreCheckRequirement
+    Type:   User Event
