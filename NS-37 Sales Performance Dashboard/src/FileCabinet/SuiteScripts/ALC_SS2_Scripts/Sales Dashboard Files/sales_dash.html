@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Life Care - Sales Performance Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+
+    <link rel="stylesheet" href="https://11346072.app.netsuite.com/core/media/media.nl?id=1450167&c=11346072&h=UmaEAmloZmnC6cKD2E_Ku9CZUMGCRWIxosX6APt2ti8S2gHV&_xt=.css">
+    <!-- <link rel="stylesheet" href="/sales_dash.css"> -->
+
+    <script src="https://11346072.app.netsuite.com/core/media/media.nl?id=1450166&c=11346072&h=_9hFyCXt4ogkM2R0G7aA9B0wasv-e1A1gl8qseVC4Tlm3SiC&_xt=.js"></script>
+    <!-- <script src="/scripts/charts/chart.js"></script> -->
+    <script src="https://11346072.app.netsuite.com/core/media/media.nl?id=1450863&c=11346072&h=L7dyo_fiPOFY6lqOCytRuSywYRCWCpT6ko6lOBwMMf-K1a1s&_xt=.js"></script>
+    <!-- <script src="/scripts/chartjs-plugin-datalabels.min.js"></script> -->
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <header>
+        <div class="container header-top">
+            <img src="https://www.alphalifecare.com.au/Themes/BPDTHEME01/theme-client-updates/img/logos/logo.svg" height="40px" width="auto" />
+            <h1>Sales Performance Dashboard</h1>
+        </div>
+    </header>
+    
+    <div class="container content">
+        <div class="kpi-row">
+            <div class="kpi card">
+                <div class="header">
+                    <div class="title">Total Sales</div>
+                </div>
+                <div class="value" id="kpiTotalSales">-</div>
+                <div class="sub">for this year</div>
+            </div>
+            <div class="kpi card">
+                <div class="header">
+                    <div class="title">Gap to Target</div>
+                </div>
+                <div class="value" id="kpiGapToTarget">-</div>
+                <div class="sub">of annual target</div>
+            </div>
+            <div class="kpi card">
+                <div class="header">
+                    <div class="title">Reps at Quota</div>
+                </div>
+                <div class="value" id="kpiRepsAtQuota">-</div>
+                <div class="sub">reps meeting target</div>
+            </div>
+            <div class="kpi card">
+                <div class="header">
+                    <div class="title">Quota Attainment</div>
+                </div>
+                <div class="value" id="kpiQuotaAttainment">-</div>
+                <div class="sub">of sales quotas met</div>
+            </div>
+        </div>
+        
+        <div class="sidebar-split">
+            <aside>
+                <div class="card leader-board">
+                    <div class="header">
+                        <div class="title">Sales Leader Board</div>
+                        <!-- <div class="actions">
+                            <button type="button" class="link" id="leader-board-view-all">
+                                View all
+                                <i class="ph ph-arrow-square-out"></i>
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="content" id="salesLeaderBoard"></div>
+                </div>
+                <div class="card leader-board">
+                    <div class="header">
+                        <div class="title">Sales vs Target by Rep</div>
+                        <!-- <div class="actions">
+                            <button type="button" class="link" id="leader-board-view-all">
+                                View all
+                                <i class="ph ph-arrow-square-out"></i>
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="content" id="salesVsTargetBoard"></div>
+                </div>
+                <div class="card leader-board">
+                    <div class="header">
+                        <div class="title">Top Departments by Revenue</div>
+                        <!-- <div class="actions">
+                            <button type="button" class="link" id="departments-view-all">
+                                View all
+                                <i class="ph ph-arrow-square-out"></i>
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="content" id="departmentBoard"></div>
+                </div>
+            </aside>
+
+            <main>
+                <div class="card sales-chart">
+                    <div class="header">
+                        <div class="title">Sales by Quarter</div>
+                        <!-- <div class="actions">
+                            <button type="button" class="link" id="btn-refresh" data-type="sales-by-quarter">
+                                Refresh
+                                <i class="ph ph-arrow-clockwise"></i>
+                            </button>
+                        </div> -->
+                    </div>
+                    <div class="content">
+                        <div class="chart vertical">
+                            <canvas id="chartSalesByQuarter"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card sales-chart">
+                    <div class="header">
+                        <div class="title">Member Sales</div>
+                        <div class="actions">
+                            <select data-action="member-select-period" name="memberSalesPeriod" id="memberSalesPeriod">
+                                <option value="">Year</option>
+                                <option value="q1">Q1</option>
+                                <option value="q2">Q2</option>
+                                <option value="q3">Q3</option>
+                                <option value="q4">Q4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="chart">
+                            <canvas id="chartMemberSales"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card sales-chart">
+                    <div class="header">
+                        <div class="title">Department Sales</div>
+                        <div class="actions">
+                            <!-- <select data-action="dep-select-dep" name="departmentSalesDepartment" id="departmentSalesDepartment"></select> -->
+                            <select data-action="dep-select-period" name="departmentSalesPeriod" id="departmentSalesPeriod">
+                                <option value="">Year</option>
+                                <option value="q1">Q1</option>
+                                <option value="q2">Q2</option>
+                                <option value="q3">Q3</option>
+                                <option value="q4">Q4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="chart">
+                            <canvas id="chartDepartmentSales"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- <script src="/scripts/load.js"></script> -->
+    <!-- <script src="/scripts/kpi.js"></script> -->
+    <!-- <script src="/scripts/leader-board.js"></script> -->
+    <!-- <script src="/scripts/charts/sales-by-quarter.js"></script> -->
+    <!-- <script src="/scripts/charts/member-sales.js"></script> -->
+    <!-- <script src="/scripts/charts/department-sales.js"></script> -->
+    <!-- <script>
+        window.addEventListener("DOMContentLoaded", loadData);
+    </script> -->
+    <!-- <script src="/scripts/sales_dash.js"></script> -->
+    <script src="https://11346072.app.netsuite.com/core/media/media.nl?id=1450268&c=11346072&h=wndLXy7FcVMWOD07Zsc7akLhNHIju2MQBBKjdf1tgMeVvRD6&_xt=.js"></script>
+</body>
+</html>

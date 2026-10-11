@@ -1,0 +1,17 @@
+body > .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    margin-bottom: 3rem;
+}
+.sidebar-split {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: flex-start;
+    gap: var(--gap);
+}
+.sidebar-split > * {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
