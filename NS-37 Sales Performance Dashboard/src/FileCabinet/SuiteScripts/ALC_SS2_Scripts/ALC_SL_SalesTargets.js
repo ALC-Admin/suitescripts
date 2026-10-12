@@ -7,12 +7,14 @@ define(
     [
         'N/file',
         'N/record',
+        'N/runtime',
         'N/search',
         'N/ui/serverWidget'
     ],
     (
         file,
         record,
+        runtime,
         search,
         sw
     ) => {
@@ -71,7 +73,11 @@ define(
             log.debug({ title: TITLE, details: request.parameters });
             let year = request.parameters.custpage_st_year;
 
-            parseTargetsFile({ id: fileId, year });
+            let parseResult = parseTargetsFile({ id: fileId, year });
+            response.write({ output: parseResult === true ?
+                `Sales targets for financial year ${year} have been successfully uploaded.` :
+                `An error has occurred while parsing the ${year} sales targets.`
+            });
         };
 
         const parseTargetsFile = ({ id, year }) => {
@@ -102,9 +108,11 @@ define(
                 try {
                     let targetId = salesTarget.save();
                     log.debug({ title: TITLE, details: `Successfully created sales target ID ${targetId}` });
+                    return true;
                 }
                 catch (ex) {
                     log.error({ title: TITLE, details: ex.toString() });
+                    return false;
                 }
             }
         };

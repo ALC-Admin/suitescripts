@@ -61,7 +61,7 @@ define(
                 filters,
                 columns: [ 'name' ]
             });
-            log.debug({ title: TITLE, details: fileSearch });
+            // log.debug({ title: TITLE, details: fileSearch });
 
             let fileResults = fileSearch.run().getRange({ start: 0, end: Object.keys(DASHBOARD_FILES).length });
             output = fileResults.map(f => {
@@ -72,7 +72,7 @@ define(
                 };
             });
 
-            log.debug({ title: TITLE, details: output });
+            // log.debug({ title: TITLE, details: output });
             return output;
         };
 
@@ -94,11 +94,11 @@ define(
                 }
             });
 
-            log.debug({ title: TITLE, details: output });
+            // log.debug({ title: TITLE, details: output });
             return output;
         };
 
-        const getSalesTeam = () => {
+        /* const getSalesTeam = () => {
             const TITLE = `${MODULE}.GetSalesTeam`;
 
             let employeeSearch = search.create({
@@ -119,9 +119,9 @@ define(
 
             log.debug({ title: TITLE, details: output });
             return output;
-        };
+        }; */
 
-        const getSalesReport = () => {
+        /* const getSalesReport = () => {
             const TITLE = `${MODULE}.GetSalesReport`;
 
             let targets = getSalesTargets();
@@ -188,13 +188,13 @@ define(
             // log.debug({ title: TITLE, details: report[0] });
 
             return report;
-        };
+        }; */
 
         const getSalesReportByDepartment = (parameters) => {
             const TITLE = `${MODULE}.GetSalesReportByDepartment`;
 
             let { department } = parameters;
-            log.debug({ title: TITLE, details: `department = ${department}` });
+            // log.debug({ title: TITLE, details: `department = ${department}` });
             if (!department) {
                 log.debug({ title: TITLE, details: 'No department. Exiting...' });
                 return []
@@ -210,7 +210,7 @@ define(
                 'AND',
                 [ 'department', 'is', department ]
             ];
-            log.debug({ title: TITLE, details: salesSearch.filterExpression });
+            // log.debug({ title: TITLE, details: salesSearch.filterExpression });
             // salesSearch.filters.push(search.createFilter({
             //     // name: 'internalid',
             //     name: 'department',
@@ -232,8 +232,14 @@ define(
                 };
             });
 
-            log.debug({ title: TITLE, details: report });
+            // log.debug({ title: TITLE, details: report });
             return report;
+        };
+
+        const getFinancialYear = () => {
+            let now = new Date();
+            let year = now.getFullYear();
+            return now.getMonth() >= 6 ? parseInt(year) + 1 : year;
         };
 
         const getSalesTargets = () => {
@@ -243,7 +249,7 @@ define(
                 type: SALES_TARGET.ID,
                 filters: [
                     [ SALES_TARGET.Fields.Inactive, 'is', false ], 'AND',
-                    [ SALES_TARGET.Fields.FinancialYear, 'is', (new Date()).getFullYear().toString() ]
+                    [ SALES_TARGET.Fields.FinancialYear, 'is', getFinancialYear().toString() ]
                 ],
                 columns: Object.values(SALES_TARGET.Fields)
             });
@@ -258,7 +264,7 @@ define(
                 obj.name = d.getText(d.columns[1]);
                 return obj;
             });
-            log.debug({ title: TITLE, details: output });
+            // log.debug({ title: TITLE, details: output });
 
             return output;
         };
@@ -267,7 +273,7 @@ define(
             const TITLE = `${MODULE}.RenderSalesDashboard`;
             if (method.toUpperCase() !== 'GET') {
                 let msg = `Invalid method: ${method.toUpperCase()}`;
-                log.debug({ title: TITLE, details: msg });
+                log.audit({ title: TITLE, details: msg });
                 return msg;
             }
 
@@ -279,7 +285,7 @@ define(
                 deploymentId: runtime.getCurrentScript().deploymentId,
                 returnExternalUrl: true
             });
-            log.debug({ title: TITLE, details: externalUrl });
+            // log.debug({ title: TITLE, details: externalUrl });
 
             let output = html.contents.replace('{{BACKEND}}', externalUrl);
             // return html.contents;
@@ -307,22 +313,42 @@ define(
                 const { action } = request.parameters;
                 switch (action?.toLowerCase()) {
                     case 'get-departments': {
+                        // response.setHeader({
+                        //     name: 'Content-Type',
+                        //     value: 'application/json'
+                        // });
                         output = JSON.stringify(getDepartments());
                         break;
                     }
                     case 'get-targets': {
+                        // response.setHeader({
+                        //     name: 'Content-Type',
+                        //     value: 'application/json'
+                        // });
                         output = JSON.stringify(getSalesTargets());
                         break;
                     }
-                    case 'get-report': {
-                        output = JSON.stringify(getSalesReport());
-                        break;
-                    }
+                    // case 'get-report': {
+                        // response.setHeader({
+                        //     name: 'Content-Type',
+                        //     value: 'application/json'
+                        // });
+                    //     output = JSON.stringify(getSalesReport());
+                    //     break;
+                    // }
                     case 'get-report-by-dep': {
+                        // response.setHeader({
+                        //     name: 'Content-Type',
+                        //     value: 'application/json'
+                        // });
                         output = JSON.stringify(getSalesReportByDepartment(request.parameters));
                         break;
                     }
                     default: {
+                        // response.setHeader({
+                        //     name: 'Content-Type',
+                        //     value: 'text/html'
+                        // });
                         output = renderSalesDashboard(request);
                     }
                 }
