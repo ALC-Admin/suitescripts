@@ -26,6 +26,8 @@ define(
             ID: 'customrecord_alc_sales_trgt',
             Fields: {
                 Inactive: 'isinactive',
+                Type: 'custrecord_alc_sales_trgt_type',
+                Department: 'custrecord_alc_sales_trgt_dep',
                 SalesRep: 'custrecord_alc_sales_trgt_rep',
                 FinancialYear: 'custrecord_alc_sales_trgt_year',
                 Q1: 'custrecord_alc_sales_trgt_q1',
@@ -37,6 +39,8 @@ define(
         };
         const DATA_MAP = {
             id: SALES_TARGET.Fields.SalesRep,
+            type: SALES_TARGET.Fields.Type,
+            dep: SALES_TARGET.Fields.Department,
             fy: SALES_TARGET.Fields.FinancialYear,
             q1: SALES_TARGET.Fields.Q1,
             q2: SALES_TARGET.Fields.Q2,
@@ -193,7 +197,7 @@ define(
         const getSalesReportByDepartment = (parameters) => {
             const TITLE = `${MODULE}.GetSalesReportByDepartment`;
 
-            let { department } = parameters;
+            let { department, fy } = parameters;
             // log.debug({ title: TITLE, details: `department = ${department}` });
             if (!department) {
                 log.debug({ title: TITLE, details: 'No department. Exiting...' });
@@ -242,30 +246,70 @@ define(
             return now.getMonth() >= 6 ? parseInt(year) + 1 : year;
         };
 
-        const getSalesTargets = () => {
+        const getSalesTargets = (year) => {
             const TITLE = `${MODULE}.GetSalesTargets`;
 
             let targetSearch = search.create({
                 type: SALES_TARGET.ID,
                 filters: [
                     [ SALES_TARGET.Fields.Inactive, 'is', false ], 'AND',
-                    [ SALES_TARGET.Fields.FinancialYear, 'is', getFinancialYear().toString() ]
+                    [ SALES_TARGET.Fields.FinancialYear, 'is', year || getFinancialYear().toString() ]
                 ],
                 columns: Object.values(SALES_TARGET.Fields)
             });
 
             let targetResults = targetSearch.run().getRange({ start: 0, end: 1000 });
+            log.debug({ title: `${TITLE} columns`, details: targetResults[0].columns });
+            // let output = {
+            //     departments: [],
+            //     members: []
+            // };
             let output = targetResults.map(d => {
                 let obj = {};
                 Object.values(SALES_TARGET.Fields).forEach(f => {
                     if (f.toLowerCase() === 'isinactive') { return true; }
                     obj[Object.keys(DATA_MAP).find(key => DATA_MAP[key] === f)] = d.getValue({ name: f })
                 });
-                obj.name = d.getText(d.columns[1]);
+                if (obj.type === '1') {
+                    obj.id = JSON.stringify(d.dep);
+                    obj.name = d.getText({ name: SALES_TARGET.Fields.Department });
+                }
+                else {
+                    obj.name = d.getText({ name: SALES_TARGET.Fields.SalesRep });
+                }
+
+                if (!obj.dep) { delete obj.dep }
+                // delete obj.dep;
                 return obj;
             });
-            // log.debug({ title: TITLE, details: output });
+            log.debug({ title: TITLE, details: output });
 
+            return output;
+        };
+
+        const getYears = () => {
+            const TITLE = `${MODULE}.GetYears`;
+
+            let yearSearch = search.create({
+                type: SALES_TARGET.ID,
+                filters: [
+                    [ SALES_TARGET.Fields.Inactive, 'is', false ]
+                ],
+                columns: [
+                    search.createColumn({
+                        name: SALES_TARGET.Fields.FinancialYear,
+                        summary: search.Summary.GROUP
+                    })
+                ]
+            });
+            let yearResults = yearSearch.run().getRange({ start: 0, end: 1000 });
+            let output = yearResults.map(d =>
+                d.getValue({
+                    name: SALES_TARGET.Fields.FinancialYear,
+                    summary: search.Summary.GROUP
+                })
+            );
+            log.debug({ title: TITLE, details: output });
             return output;
         };
 
@@ -310,22 +354,30 @@ define(
                 const TITLE = `${MODULE}.Request`;
                 
                 let output = 'Not yet implemented.';
-                const { action } = request.parameters;
+                const { action, fy } = request.parameters;
                 switch (action?.toLowerCase()) {
                     case 'get-departments': {
-                        // response.setHeader({
-                        //     name: 'Content-Type',
-                        //     value: 'application/json'
-                        // });
+                        response.setHeader({
+                            name: 'Content-Type',
+                            value: 'application/json'
+                        });
                         output = JSON.stringify(getDepartments());
                         break;
                     }
-                    case 'get-targets': {
+                    // case 'get-targets': {
                         // response.setHeader({
                         //     name: 'Content-Type',
                         //     value: 'application/json'
                         // });
-                        output = JSON.stringify(getSalesTargets());
+                    //     output = JSON.stringify(getSalesTargets(fy));
+                    //     break;
+                    // }
+                    case 'get-master': {
+                        output = JSON.stringify({
+                            departments: getDepartments(),
+                            targets: getSalesTargets(fy),
+                            years: getYears()
+                        });
                         break;
                     }
                     // case 'get-report': {
