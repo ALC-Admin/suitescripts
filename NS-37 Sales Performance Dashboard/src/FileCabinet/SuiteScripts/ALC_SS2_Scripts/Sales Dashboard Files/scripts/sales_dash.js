@@ -4,6 +4,10 @@ window.ALCQ_DEPARTMENTS = [];
 window.ALCQ_YEARS = [];
 
 window.ALCQ_CHARTS = {
+    salesByQuarter: {
+        chart: '',
+        filters: {}
+    },
     departmentSales: {
         chart: '',
         filters: {}
@@ -13,6 +17,12 @@ window.ALCQ_CHARTS = {
         filters: {}
     }
 };
+
+function getCurrentFinancialYear() {
+    let now = new Date();
+    let year = now.getFullYear();
+    return now.getMonth() >= 6 ? parseInt(year) + 1 : year;
+}
 
 /** KPI */
 function buildKPIs() {
@@ -171,16 +181,17 @@ function buildLeaderboards() {
 
 /** CHARTS */
 function buildSalesByQuarter() {
-    const FY = new URLSearchParams(location.search).get('fy');
+    const FY = window.ALCQ_CHARTS.salesByQuarter.filters.year || getCurrentFinancialYear();
     
     let periodSelect = document.getElementById('financialYear');
-    window.ALCQ_YEARS.forEach(year => {
-        periodSelect.add(new Option(year, year, year === FY, year === FY));
-    });
+    if (periodSelect.length <= 0) {
+        window.ALCQ_YEARS.forEach(year => {
+            periodSelect.add(new Option(year, year, year === FY, year === FY));
+        });
+    }
 
     let quarterlyTargets = [];
     let quarterlyValues = [];
-
     for (let i = 1; i <= 4; i++) {
         let sumQuarter = 0;
         let sumTarget = 0;
@@ -195,218 +206,237 @@ function buildSalesByQuarter() {
         quarterlyValues.push(sumQuarter);
     }
     
-    const ctxSBQ = document.getElementById('chartSalesByQuarter');
-    const chart = new Chart(ctxSBQ, {
-        type: 'bar',
-        data: {
-            labels: [ 'Q1', 'Q2', 'Q3', 'Q4' ],
-            datasets: [{
-                label: 'Sales',
-                data: quarterlyValues,
-                borderWidth: 1
-            }, {
-                label: 'Target',
-                data: quarterlyTargets,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            barPercentage: 0.8,
-            categoryPercentage: 0.5,
-            maintainAspectRatio: false,
-            maxBarThickness: 50,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
+    if (window.ALCQ_CHARTS.memberSales.chart) {
+        updateSalesByQuarter({ targets: quarterlyTargets, values: quarterlyValues });
+    }
+    else {
+        const ctxSBQ = document.getElementById('chartSalesByQuarter');
+        window.ALCQ_CHARTS.salesByQuarter.chart = new Chart(ctxSBQ, {
+            type: 'bar',
+            data: {
+                labels: [ 'Q1', 'Q2', 'Q3', 'Q4' ],
+                datasets: [{
+                    label: 'Sales',
+                    data: quarterlyValues,
+                    borderWidth: 1
+                }, {
+                    label: 'Target',
+                    data: quarterlyTargets,
+                    borderWidth: 1
+                }]
             },
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Sales ($)',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        padding: { top: 10, bottom: 20 }
+            options: {
+                barPercentage: 0.8,
+                categoryPercentage: 0.5,
+                maintainAspectRatio: false,
+                maxBarThickness: 50,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Sales ($)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: { top: 10, bottom: 20 }
+                        }
                     }
                 }
-            }
-        },
-    });
+            },
+        });
+    }
 }
 
 function buildMemberSales() {
-    // let { targets, departments, data } = PARAMS;
-
+    const PERIOD = window.ALCQ_CHARTS.memberSales.filters.period;
     const MEMBER_DATA = window.ALCQ_TARGETS.filter(t => t.type === '2')
     let memberValues = MEMBER_DATA
         .map(t => {
             let total = 0;
             window.ALCQ_SALES_DATA.forEach(d => {
                 let memberData = d.find(m => m.member === t.id);
-                total += memberData ? parseFloat(memberData.total) : 0
+                total += memberData ? parseFloat(memberData[PERIOD || 'total']) : 0
                 return true;
             });
             return total;
         });
-    let memberTargets = MEMBER_DATA.map(t => t.year);
-    console.log('memberTargets', memberTargets);
+    // console.log('memberValues', memberValues);
+    let memberTargets = MEMBER_DATA.map(t => t[PERIOD || 'year']);
+    // console.log('memberTargets', memberTargets);
     
-    const ctxMS = document.getElementById('chartMemberSales');
-    const barWidth = 80;
-    const chartPadding = 20;
-    const chartHeight = (window.ALCQ_SALES_DATA.length * (barWidth + chartPadding)) + chartPadding;
-    ctxMS.style.height = `${chartHeight}px`;
-    ctxMS.style.width = `100%`;
-    
-    window.ALCQ_CHARTS.memberSales.chart = new Chart(ctxMS, {
-        type: 'bar',
-        data: {
-            labels: MEMBER_DATA.map(t => t.name),
-            datasets: [{
-                label: 'Sales ($)',
-                data: memberValues,
-                borderWidth: 0
-            }, {
-                label: 'Target',
-                data: memberTargets,
-                borderWidth: 0
-            }]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            indexAxis: 'y',
-            barPercentage: 0.8,
-            categoryPercentage: 0.5,
-            barThickness: 15,
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: '#333',
-                    align: 'end',
-                    anchor: 'start',
-                    clamp: true,
-                    formatter: function (value) {
-                        return (new Intl.NumberFormat('en', {
-                            notation: 'compact',
-                            compactDisplay: 'short',
-                            minimumFractionDigits: 1,
-                            maximumFractionDigits: 1                            
-                        })).format(value)
-                    }
-                },
-                legend: {
-                    position: 'bottom'
-                },
+    if (window.ALCQ_CHARTS.memberSales.chart) {
+        updateMemberChart({ targets: memberTargets, values: memberValues });
+    }
+    else {
+        const ctxMS = document.getElementById('chartMemberSales');
+        const barWidth = 80;
+        const chartPadding = 20;
+        const chartHeight = (window.ALCQ_SALES_DATA.length * (barWidth + chartPadding)) + chartPadding;
+        ctxMS.style.height = `${chartHeight}px`;
+        ctxMS.style.width = `100%`;
+        
+        window.ALCQ_CHARTS.memberSales.chart = new Chart(ctxMS, {
+            type: 'bar',
+            data: {
+                labels: MEMBER_DATA.map(t => t.name),
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: memberValues,
+                    borderWidth: 0
+                }, {
+                    label: 'Target',
+                    data: memberTargets,
+                    borderWidth: 0
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                indexAxis: 'y',
+                barPercentage: 0.8,
+                categoryPercentage: 0.5,
+                barThickness: 15,
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        color: '#333',
+                        align: 'end',
+                        anchor: 'start',
+                        clamp: true,
+                        formatter: function (value) {
+                            return (new Intl.NumberFormat('en', {
+                                notation: 'compact',
+                                compactDisplay: 'short',
+                                minimumFractionDigits: 1,
+                                maximumFractionDigits: 1                            
+                            })).format(value)
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function buildDepartmentSales() {
+    const PERIOD = window.ALCQ_CHARTS.departmentSales.filters.period;
     const DEPARTMENT_DATA = window.ALCQ_TARGETS.filter(t => t.type === '1');
     let departmentValues = DEPARTMENT_DATA
         .map(t => {
             let department = window.ALCQ_DEPARTMENTS.find(d => d.id === t.dep);
             let total = 0;
             window.ALCQ_SALES_DATA.forEach(d => {
-                total += d.filter(m => m.id === department.id).reduce((a, b) => a + parseFloat(b.total), 0);
+                total += d.filter(m => m.id === department.id)
+                    .reduce((a, b) =>
+                        a + parseFloat(b[PERIOD || 'total'])
+                    , 0);
                 return true;
             });
             return total;
         });
-    let departmentTargets = DEPARTMENT_DATA.map(t => t.year);
+    // console.log('  ** buildDepartmentSales; departmentValues', departmentValues);
+    let departmentTargets = DEPARTMENT_DATA.map(t => t[PERIOD || 'year']);
+    // console.log('  ** buildDepartmentSales; departmentTargets', departmentTargets);
+    
+    if (window.ALCQ_CHARTS.departmentSales.chart) {
+        updateDepartmentChart({ targets: departmentTargets, values: departmentValues });
+    }
+    else {
+        const ctxDS = document.getElementById('chartDepartmentSales');
+        const barWidth = 40;
+        const chartPadding = 10;
+        const chartHeight = (departmentValues.length * (barWidth + chartPadding)) + chartPadding;
+        ctxDS.style.height = `${chartHeight}px`;
+        ctxDS.style.width = `100%`;
 
-    const ctxDS = document.getElementById('chartDepartmentSales');
-    const barWidth = 40;
-    const chartPadding = 10;
-    const chartHeight = (departmentValues.length * (barWidth + chartPadding)) + chartPadding;
-    ctxDS.style.height = `${chartHeight}px`;
-    ctxDS.style.width = `100%`;
-
-    window.ALCQ_CHARTS.departmentSales.chart = new Chart(ctxDS, {
-        type: 'bar',
-        data: {
-            labels: DEPARTMENT_DATA.map(d => d.name),
-            datasets: [{
-                label: 'Sales',
-                data: departmentValues,
-                borderWidth: 0
-            }, {
-                label: 'Target',
-                data: departmentTargets,
-                borderWidth: 0
-            }]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            indexAxis: 'y',
-            barPercentage: 0.8,
-            categoryPercentage: 0.5,
-            barThickness: 16,
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: '#333',
-                    align: 'end',
-                    anchor: 'start',
-                    clamp: true,
-                    formatter: function (value) {
-                        return (new Intl.NumberFormat('en', {
-                            notation: 'compact',
-                            compactDisplay: 'short',
-                            minimumFractionDigits: 1,
-                            maximumFractionDigits: 1                            
-                        })).format(value)
-                    }
-                },
-                legend: {
-                    position: 'bottom'
-                },
+        window.ALCQ_CHARTS.departmentSales.chart = new Chart(ctxDS, {
+            type: 'bar',
+            data: {
+                labels: DEPARTMENT_DATA.map(d => d.name),
+                datasets: [{
+                    label: 'Sales',
+                    data: departmentValues,
+                    borderWidth: 0
+                }, {
+                    label: 'Target',
+                    data: departmentTargets,
+                    borderWidth: 0
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                indexAxis: 'y',
+                barPercentage: 0.8,
+                categoryPercentage: 0.5,
+                barThickness: 16,
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        color: '#333',
+                        align: 'end',
+                        anchor: 'start',
+                        clamp: true,
+                        formatter: function (value) {
+                            return (new Intl.NumberFormat('en', {
+                                notation: 'compact',
+                                compactDisplay: 'short',
+                                minimumFractionDigits: 1,
+                                maximumFractionDigits: 1                            
+                            })).format(value)
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 /** LOAD */
 async function loadData() {
     const BACKEND = 'https://11346072.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5114&deploy=1&compid=11346072&ns-at=AAEJ7tMQVrrnycBf4R2WYtw9-k_oWI0hXgcW5Cbz2qAnBAFtcv4';
-
-    // DEPR
-    // let targets = await fetch(`${BACKEND}&action=get-targets`);
-    // window.ALCQ_TARGETS = await targets.json();
-    // console.log(window.ALCQ_TARGETS);
-
     const FY = new URLSearchParams(location.search).get('fy');
     let masterData = await fetch(`${BACKEND}&action=get-master&fy=${FY || ''}`);
     let { departments, targets, years } = await masterData.json();
     window.ALCQ_DEPARTMENTS = departments;
-    console.log(window.ALCQ_DEPARTMENTS);
+    // console.log(window.ALCQ_DEPARTMENTS);
     window.ALCQ_TARGETS = targets;
-    console.log(window.ALCQ_TARGETS);
+    // console.log(window.ALCQ_TARGETS);
     window.ALCQ_YEARS = years;
-    console.log(window.ALCQ_YEARS);
+    // console.log(window.ALCQ_YEARS);
 
-    let departmentData = window.ALCQ_DEPARTMENTS.map(async (d) => {
+    let departmentRequests = window.ALCQ_DEPARTMENTS.map(async (d) => {
         const response = await fetch(`${BACKEND}&action=get-report-by-dep&department=${d.id}`);
         return response.json();
     });
-    window.ALCQ_SALES_DATA = await Promise.all(departmentData);
-    console.log(window.ALCQ_SALES_DATA);
-    
-    // const PARAMS = { targets, departments, data: departmentData };
-    // buildKPIs(PARAMS);
+    window.ALCQ_SALES_DATA = await Promise.all(departmentRequests);
+    // console.log(window.ALCQ_SALES_DATA);
+
     buildKPIs();
     buildLeaderboards();
     buildSalesByQuarter();
     buildMemberSales();
     buildDepartmentSales();
+    // console.log('** REBUILD DASHBOARD **');
 
-    document.getElementById('loading-overlay').classList.add('fade-out');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (!loadingOverlay.classList.contains('fade-out')) {
+        loadingOverlay.classList.add('fade-out');
+    }
+
+    setTimeout(loadData, 5000);
 }
 
 /** ENTRY */
@@ -415,64 +445,42 @@ window.addEventListener("DOMContentLoaded", loadData);
 /** EVENT HANDLERS */
 document.getElementById('financialYear').addEventListener('change', e => {
     const selectedValue = e.target.value;
-    console.log('financialYear selectedValue', selectedValue);
+    // console.log('financialYear selectedValue', selectedValue);
 
-    const url = new URL(location.href);
-    url.searchParams.set('fy', selectedValue);
-    console.log('url', url.toString());
-    location.href = url.toString();
+    window.ALCQ_CHARTS.salesByQuarter.filters.year = selectedValue;
+    buildSalesByQuarter();
 });
+function updateSalesByQuarter({ targets, values }) {
+    window.ALCQ_CHARTS.salesByQuarter.chart.data.datasets[0].data = values;
+    window.ALCQ_CHARTS.departmentSales.chart.data.datasets[1].data = targets;
+    window.ALCQ_CHARTS.departmentSales.chart.update();
+    // console.log('** updateSalesByQuarter ==> updated chart');
+}
 
 document.getElementById('memberSalesPeriod').addEventListener('change', e => {
     const selectedValue = e.target.value;
-    console.log('member selectedValue', selectedValue);
+    // console.log('member selectedValue', selectedValue);
 
-    const MEMBER_DATA = window.ALCQ_TARGETS.filter(t => t.type === '2');
-    let filteredData = MEMBER_DATA.map(t => {
-        let total = 0;
-        window.ALCQ_SALES_DATA.forEach(d => {
-            let memberData = d.find(m => m.member === t.id);
-            total += memberData ? parseFloat(memberData[selectedValue || 'total']) : 0
-            return true;
-        });
-        return total;
-    });
-    let filteredTargets = MEMBER_DATA.map(t => t[selectedValue || 'year']);
-    window.ALCQ_CHARTS.memberSales.chart.data.datasets[0].data = filteredData;
-    window.ALCQ_CHARTS.memberSales.chart.data.datasets[1].data = filteredTargets;
-    window.ALCQ_CHARTS.memberSales.chart.update();
+    window.ALCQ_CHARTS.memberSales.filters.period = selectedValue;
+    buildMemberSales();
 });
+function updateMemberChart({ targets, values }) {
+    window.ALCQ_CHARTS.memberSales.chart.data.datasets[0].data = values;
+    window.ALCQ_CHARTS.memberSales.chart.data.datasets[1].data = targets;
+    window.ALCQ_CHARTS.memberSales.chart.update();
+    // console.log('** updateMemberChart ==> updated chart');
+}
 
 document.getElementById('departmentSalesPeriod').addEventListener('change', e => {
     const selectedValue = e.target.value;
-    console.log('department selectedValue', selectedValue);
+    // console.log('department selectedValue', selectedValue);
     
     window.ALCQ_CHARTS.departmentSales.filters.period = selectedValue;
-    updateDepartmentChart();
+    buildDepartmentSales();
 });
-function updateDepartmentChart() {
-    const PERIOD = window.ALCQ_CHARTS.departmentSales.filters.period;
-    // Allow for future creation of department filter
-    let departments = window.ALCQ_CHARTS.departmentSales.filters.department ?
-        window.ALCQ_DEPARTMENTS.filter(d => d.id === window.ALCQ_CHARTS.departmentSales.filters.department) : window.ALCQ_DEPARTMENTS;
-    let filteredData = departments.map(department => {
-        let total = 0;
-        window.ALCQ_SALES_DATA.forEach(d => {
-            if (window.ALCQ_CHARTS.departmentSales.filters.department) {
-
-            }
-            total += d.filter(m => m.id === department.id)
-                .reduce((a, b) =>
-                    a + parseFloat(b[PERIOD || 'total']),
-                    0
-                );
-            return true;
-        });
-        return total;
-    });
-    window.ALCQ_CHARTS.departmentSales.chart.data.datasets[0].data = filteredData;
-
-    let filteredTargets = window.ALCQ_TARGETS.filter(t => t.type === '1').map(t => t[PERIOD || 'year']);
-    window.ALCQ_CHARTS.departmentSales.chart.data.datasets[1].data = filteredTargets;
+function updateDepartmentChart({ targets, values }) {
+    window.ALCQ_CHARTS.departmentSales.chart.data.datasets[0].data = values;
+    window.ALCQ_CHARTS.departmentSales.chart.data.datasets[1].data = targets;
     window.ALCQ_CHARTS.departmentSales.chart.update();
+    // console.log('** updateDepartmentChart ==> updated chart');
 }
