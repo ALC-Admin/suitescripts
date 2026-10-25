@@ -1,0 +1,38 @@
+<#assign subId = transaction.subsidiary.internalid?string>
+<#if subId == "7">
+  <#assign logoUrl = "https://4030603.app.netsuite.com/core/media/media.nl?id=12470116&c=4030603&h=lf4c3FLAv3sjZprv0hC38xM05cqbglwtVZsMtTrD18XlUfw7">
+<#else>
+  <#assign logoUrl = "https://11346072-sb1.app.netsuite.com/core/media/media.nl?id=8342&c=11346072_SB1&h=Jc78-KqMpCVNdeOd9zVVYr7WzSdN3AFsnCoh0PxqM2Fe1sga">
+</#if>
+<#assign arEmail = (transaction.custbody_cmc_print_ar_email)!"">
+<#assign subAddr = (transaction.custbody_cmc_print_sub_addr)!"">
+<#assign addressBlock = subAddr?trim?replace("\r\n", "\n")?replace("\n", "<br />")>
+<span style="font-family:Arial,Helvetica,sans-serif;">
+Greetings,<br />
+<br />
+Please find the attached Credit Memo from ${transaction.subsidiary}.<br />
+<br />
+Kindly review the credit memo and let us know if you have any questions. For any queries, please contact us at <a href="mailto:${arEmail}">${arEmail}</a>.<br />
+<br />
+Thank you.<br />
+<br />
+<#if subId == "7">
+Accounts Receivable<br />
+<br />
+<a href="mailto:${arEmail}">${arEmail}</a><br />
+<b>T</b> (02) 9714 1111<br />
+<br />
+<#if addressBlock?length gt 0>${addressBlock}<br /></#if>
+<img style="width: 400px; max-width: 100%; height: auto;" width="400" src="${logoUrl}" alt="Care Quip" /><br />
+<br />
+<a href="https://www.carequip.com.au">carequip.com.au</a> | <a href="https://www.carequip.com.au/faq/">FAQ</a> | <a href="https://www.carequip.com.au/feedback/">Share your Feedback</a> | <a href="https://www.carequip.com.au/email-policy/">Email Policy</a><br />
+<br />
+<a href="https://www.instagram.com/carequip/">Instagram</a> | <a href="https://www.facebook.com/carequip/">Facebook</a> | <a href="https://www.linkedin.com/company/care-quip">LinkedIn</a>
+<#else>
+Many thanks!<br />
+<b>Finance Team</b><br />
+<br />
+<#if addressBlock?length gt 0>${addressBlock}<br /></#if>
+<img style="width: 400px; max-width: 100%; height: auto;" width="400" src="${logoUrl}" alt="Alpha Lifecare" />
+</#if>
+</span>

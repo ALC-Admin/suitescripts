@@ -1,0 +1,26 @@
+    Steps to deploy:
+
+1.  Other Record Fields
+
+    Name:   AR Email (PDF)
+    ID:     _cmc_ar_email
+    Type:   Email
+
+2.  Transaction Body Fields
+
+    Name:   Print Subsidiary Address
+    ID:     _cmc_print_sub_addr
+    Type:   Text Area
+    Store:  False
+    Source: Subsidiary > Address
+
+    Name:   Print AR Email
+    ID:     _cmc_print_ar_email
+    Type:   Free-form-text
+    Store:  False
+    Source: Subsidiary > AR Email (PDF)
+
+3.  Email Templates
+
+    Name:   ALCQ | Credit Memo
+    ID:     _cmc_credit_memo
