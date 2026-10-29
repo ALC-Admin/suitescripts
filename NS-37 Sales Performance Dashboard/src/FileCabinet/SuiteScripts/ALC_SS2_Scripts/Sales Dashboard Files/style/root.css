@@ -1,0 +1,31 @@
+:root {
+    --darkest: rgba(0, 0, 0, 0.95);
+    --darker: rgba(0, 0, 0, 0.9);
+    --dark: rgba(0, 0, 0, 0.7);
+    --bg-lightest: oklch(0.98 0.00 248);
+    --border: oklch(0.97 0.01 248);
+    --light: rgba(255, 255, 255, 0.8);
+    --lighter: rgba(255, 255, 255, 0.9);
+    --lightest: rgba(255, 255, 255, 0.95);
+    --accent: rgb(237, 28, 36);
+    --link: oklch(0.62 0.19 260);
+    --link-hover: oklch(0.49 0.22 264);
+    --font-default: 'Inter', -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+    --gap: 1rem;
+}
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: var(--bg-lightest);
+    color: var(--darker);
+    font: 400 1rem var(--font-default);
+}
+.container {
+    width: min(120rem, 90%);
+    margin: 0 auto;
+}

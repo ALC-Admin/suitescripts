@@ -1,0 +1,33 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background-color: #fff;
+    border: 0;
+    border-radius: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+}
+.card > .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.card > .header > .title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+.card > .header > .actions > button.link {
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--link);
+    cursor: pointer;
+}
+.card > .header > .actions > button.link:hover {
+    color: var(--link-hover);
+    border-bottom: 1px solid var(--link-hover);
+}

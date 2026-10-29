@@ -1,0 +1,19 @@
+.kpi-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* display: grid; */
+    /* grid-template-columns: repeat(6, 1fr); */
+    gap: var(--gap);
+}
+.kpi > .value {
+    color: var(--darkest);
+    font: 600 2.5rem var(--font-default);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+.kpi > .sub {
+    font-size: 0.875rem;
+    opacity: 0.6;
+    text-align: center;
+}

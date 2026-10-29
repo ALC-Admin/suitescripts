@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_alc_sl_sd">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>ALC SL Sales Dashboard - NEPR-37</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/ALC_SS2_Scripts/ALC_SL_SalesDashboard.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_alc_sl_sd">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole>ONLINE_FORM_USER</audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>T</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>ALC SL Sales Dashboard - NEPR-37</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>
