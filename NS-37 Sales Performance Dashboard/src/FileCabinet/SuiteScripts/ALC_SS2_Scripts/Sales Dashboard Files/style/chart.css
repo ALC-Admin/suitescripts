@@ -1,0 +1,8 @@
+.chart {
+    position: relative;
+    width: 100%;
+}
+.chart.vertical {
+    height: 18rem;
+    width: 100%;
+}

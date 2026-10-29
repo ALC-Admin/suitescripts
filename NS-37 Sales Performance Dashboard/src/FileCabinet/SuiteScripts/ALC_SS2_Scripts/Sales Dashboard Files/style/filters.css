@@ -1,0 +1,9 @@
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    /* border: 1px solid var(--border); */
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.75rem;
+}
