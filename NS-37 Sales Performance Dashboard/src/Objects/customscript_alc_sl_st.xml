@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_alc_sl_st">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>ALC SL Sales Targets - NEPR-37</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/ALC_SS2_Scripts/ALC_SL_SalesTargets.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_alc_sl_st">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>RELEASED</status>
+      <title>ALC SL Sales Targets - NEPR-37</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

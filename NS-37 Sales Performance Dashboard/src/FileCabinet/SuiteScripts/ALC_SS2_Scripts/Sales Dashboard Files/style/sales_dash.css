@@ -1,0 +1,193 @@
+/* ROOT */
+:root {
+    --darkest: rgba(0, 0, 0, 0.95);
+    --darker: rgba(0, 0, 0, 0.9);
+    --dark: rgba(0, 0, 0, 0.7);
+    --bg-lightest: oklch(0.98 0.00 248);
+    --border: oklch(0.97 0.01 248);
+    --light: rgba(255, 255, 255, 0.8);
+    --lighter: rgba(255, 255, 255, 0.9);
+    --lightest: rgba(255, 255, 255, 0.95);
+    --accent: rgb(237, 28, 36);
+    --accent-lightest: rgba(237, 28, 36, 0.1);
+    --link: oklch(0.62 0.19 260);
+    --link-hover: oklch(0.49 0.22 264);
+    --font-default: 'Inter', -apple-system, system-ui, BlinkMacSystemFont, sans-serif;
+    --gap: 1rem;
+}
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: var(--bg-lightest);
+    color: var(--darker);
+    font: 400 1rem var(--font-default);
+}
+.container {
+    width: min(120rem, 90%);
+    margin: 0 auto;
+}
+
+/* LOADING */
+#loading-overlay {
+    background-color: #fff;
+    /* border: 1px solid red; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 500ms ease, visibility 500ms ease;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 10px solid var(--accent-lightest);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 700ms infinite linear;
+}
+@keyframes spin {
+    to { transform: rotate(360deg) }
+}
+
+.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* CARD */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background-color: #fff;
+    border: 0;
+    border-radius: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+}
+.card > .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.card > .header > .title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+.card > .header > .actions > button.link {
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--link);
+    cursor: pointer;
+}
+.card > .header > .actions > button.link:hover {
+    color: var(--link-hover);
+    border-bottom: 1px solid var(--link-hover);
+}
+
+/* HEADER */
+header {
+    padding-top: 0.5rem;
+    margin: 1rem auto 2rem;
+}
+header > .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header > .header-top > h1 {
+    font-weight: 600;
+}
+
+/* CONTENT */
+body > .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    margin-bottom: 3rem;
+}
+.sidebar-split {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: flex-start;
+    gap: var(--gap);
+}
+.sidebar-split > * {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+/* KPI */
+.kpi-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap);
+}
+.kpi > .value {
+    color: var(--darkest);
+    font: 600 2.5rem var(--font-default);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+.kpi > .sub {
+    font-size: 0.875rem;
+    opacity: 0.6;
+    text-align: center;
+}
+
+/* LEADER BOARDS */
+.leader-board > .content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0.5rem;
+}
+.leader-board > .content > .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+}
+.leader-board > .content > .row:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+}
+.leader-board > .content > .row > .value {
+    opacity: 0.6;
+}
+
+/* CHART */
+.chart {
+    position: relative;
+    width: 100%;
+}
+.chart.vertical {
+    height: 18rem;
+    width: 100%;
+}
+
+/* FORM */
+select {
+    background-color: var(--bg-lightest);
+    border: 1px solid var(--border);
+    border-radius: 0.25rem;
+    outline: none;
+    padding: 0.25rem 0.5rem;
+}
