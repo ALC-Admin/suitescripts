@@ -1,0 +1,494 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+<#if .locale == "ru_RU">
+    <link name="verdana" type="font" subtype="opentype" src="${nsfont.verdana}" src-bold="${nsfont.verdana_bold}" bytes="2" />
+</#if>
+    <macrolist>
+        <macro id="nlheader">
+            <table class="top" style="width:100%"><tr>
+	<td class="head" colspan="2" rowspan="1">TAX INVOICE</td>
+	<td colspan="1" rowspan="6" style="width:4%;">&nbsp;</td>
+	<#if record.department = "Hire Care">
+	<td class="address" colspan="1" rowspan="6"><span class="paddingbold" style="font-size: 7pt;">${subsidiary.legalname}</span><br /><span class="padding" style="font-size: 6pt;">ABN ${subsidiary.federalidnumber}<br /><br />${subsidiary.returnaddress_text}<br /><br />${subsidiary.custrecord_phone}<br /><br />hirecare@alphalifecare.com.au<br /><br />${record.subsidiary.url}</span></td>
+	<#else>
+	<td class="address" colspan="1" rowspan="6"><span class="paddingbold" style="font-size: 7pt;">${subsidiary.legalname}</span><br /><span class="padding" style="font-size: 6pt;">ABN ${subsidiary.federalidnumber}<br /><br />${subsidiary.returnaddress_text}<br /><br />${subsidiary.custrecord_phone}<br />${subsidiary.email}<br /><br />${record.subsidiary.url}</span></td>
+	</#if>
+	<td class="logo" colspan="1" rowspan="6"><#if subsidiary.logo?length != 0>
+      
+      <#if record.custbody_ndis = "Alpha Lifecare"><img src="https://11346072.app.netsuite.com/core/media/media.nl?id=205837&amp;c=11346072&amp;h=XctaNRFNxEJO90T27y_zHiRAJkL9bhonpfEtAU2TYYiBFlRl" style="height: 110px; width: 152px; align: right;" /> 
+        <#elseif record.custbody_ndis = "Alpha Care"> <img src="https://11346072.app.netsuite.com/core/media/media.nl?id=205840&amp;c=11346072&amp;h=CMFSZYR_TfpiZW0a5xaaZTAR-55yEfQq6jMIPQ6DjdMXBJR5" style="height: 50px; width: 252px; align: right;" /> 
+          <#elseif subsidiary.id = "4"> <img src="https://11346072.app.netsuite.com/core/media/media.nl?id=205841&amp;c=11346072&amp;h=HUyiA6S0HzFNjM7O1M0P8veknri_upoeuJmXBlpUI-2ZHJR1" style="height: 35px; width: 172px; align: right;" />
+            
+            
+            
+        <#elseif subsidiary.id = "6"> <img height="100" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205838&amp;c=11346072&amp;h=DD8gIOL-B1CNIqCgNYdBGFRIGW6tjgN-OHZP_-WgoZal1Mr3" style="align: right;" width="100" /> 
+        <#elseif subsidiary.id = "8"> <img height="25" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205839&amp;c=11346072&amp;h=E1iG2hsGUYj465sCcFMy5bshZowbCbZwwDrHcUEFT1TZkZj8" style="align: right;" width="153" /> 
+        <#elseif subsidiary.id = "7"> <img height="87" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205844&amp;c=11346072&amp;h=nhnUZrpovvR2O8EvnheUDLbo_NmaMtTnHHWOeHOGYYaNUA4V" style="align: right;" width="122" />
+          <#elseif subsidiary.id = "9"> <img height="87" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205844&amp;c=11346072&amp;h=nhnUZrpovvR2O8EvnheUDLbo_NmaMtTnHHWOeHOGYYaNUA4V" style="align: right;" width="122" />
+            
+             <#elseif subsidiary.id = "2"> <img height="87" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205837&amp;c=11346072&amp;h=XctaNRFNxEJO90T27y_zHiRAJkL9bhonpfEtAU2TYYiBFlRl" style="align: right;" width="122" />
+               
+               
+          <#elseif subsidiary.id = "24"> <img height="87" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205842&amp;c=11346072&amp;h=rYu_capAHdfxRbv0My0yYsJhBFBHWQzh_1QrpQRRsiHbb9jY" style="align: right;" width="122" />
+          <#elseif subsidiary.id = "23"> <img height="90" src="https://11346072.app.netsuite.com/core/media/media.nl?id=205843&amp;c=11346072&amp;h=HhGXZlzRpQzY1_7TBf5ntF7bZMtQDFsvgBe-KL6L9EzfkZL8" style="align: right;" width="150" />
+      <#elseif subsidiary.id = "1"> <img height="87" src="${subsidiary.logo?html}" style="align: right;" width="122" /> <#else> </#if> <#else> <#if companyInformation.logoUrl?length != 0> <img src="${companyInformation.logoUrl?html}" /> </#if> </#if></td>
+	</tr>
+	<tr>
+	<td colspan="2" rowspan="1">&nbsp;</td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">INVOICE NUMBER:</span></td>
+	<td class="head2"><span class="padding">${record.tranid}</span></td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">INVOICE DATE:</span></td>
+	<td class="head2"><span class="padding">${record.trandate}</span></td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">CUSTOMER ORDER NO:</span></td>
+	<td class="head2"><span class="padding">${record.otherrefnum}</span><br />&nbsp;</td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">TERMS / CURRENCY: </span></td>
+	<td class="head2"><span class="padding">${record.terms} / ${record.currency} </span></td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">DUE DATE:</span></td>
+	<td class="head2"><span class="padding">${record.duedate}</span></td>
+	<td>&nbsp;</td>
+	<td class="head1"><span class="padding">CON NOTE NO:</span></td>
+	<td class="head2"><span class="padding">${record.custbody_connote}</span></td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">ACCOUNT NUMBER:</span></td>
+	<td class="head2"><span class="padding">${record.entity.entityid}</span></td>
+	<td>&nbsp;</td>
+	<td class="head1"><span class="padding">CONTACT:</span></td>
+	<td class="head2"><span class="padding">${record.salesrep}</span></td>
+	</tr>
+	<tr>
+	<td class="head1"><span class="padding">DESPATCH METHOD:</span></td>
+	<td class="head2"><span class="padding">${record.custbody_despatch}</span></td>
+	<td>&nbsp;</td>
+	<td class="head1"><span class="padding">CONTACT EMAIL:</span></td>
+	<td class="head2"><span class="padding">${record.salesrep.email}</span></td>
+	</tr></table>
+        </macro>
+    </macrolist>
+    <style type="text/css">table {
+        <#if .locale == "zh_CN">
+            font-family: stsong, sans-serif;
+        <#elseif .locale == "zh_TW">
+            font-family: msung, sans-serif;
+        <#elseif .locale == "ja_JP">
+            font-family: heiseimin, sans-serif;
+        <#elseif .locale == "ko_KR">
+            font-family: hygothic, sans-serif;
+        <#elseif .locale == "ru_RU">
+            font-family: lucida;
+        <#else>
+            font-family: sans-serif;
+        </#if>
+            font-size: 9pt;
+        }
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            padding: 5px 6px 3px;
+            <#if record.custbody_ndis == "Alpha Lifecare">
+			background-color:rgb(255, 199, 38);
+		<#elseif record.custbody_ndis == "Alpha Care">
+            background-color:rgb(237, 28, 36);
+          color:white;
+          <#elseif subsidiary.id == "4">
+            background-color:rgb(237, 28, 36);
+          color:white;
+          <#elseif subsidiary.id == "44">
+            background-color:#9e9e9e;
+          	color:white;
+          	<#elseif subsidiary.id == "4">
+            background-color:black;
+          	color:white;
+          
+          <#elseif subsidiary.id == "2">
+            background-color:rgb(255, 199, 38);
+          	color:white;
+          
+          
+            <#elseif subsidiary.id == "6">
+            background-color:#ab9787;
+            <#elseif subsidiary.id == "8">
+            background-color:#8daebe;
+            <#elseif subsidiary.id == "7">
+            background-color:#0077b3;
+          	color:white;
+          <#elseif subsidiary.id == "9">
+            background-color:#0077b3;
+          	color:white;
+            <#elseif subsidiary.id == "1">
+            background-color:#9e9e9e;
+            <#else></#if>
+            border-color: #f1f1f1;
+        }
+        td {
+           	padding: 4px 6px;
+            border-color: #333333;
+        }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+        table.header td {
+            padding: 0;
+            font-size: 10pt;
+        }
+      	table.top{
+          	table-layout: fixed;
+        }
+      	td.head{
+          	width:48%;
+          	font-size: 15pt;
+          	font-weight: bold;
+          	<#if record.custbody_ndis == "Alpha Lifecare">
+			background-color:rgb(255, 199, 38);
+		<#elseif record.custbody_ndis == "Alpha Care">
+            background-color:rgb(237, 28, 36);
+          color:white;
+          <#elseif subsidiary.id == "4">
+            background-color:rgb(237, 28, 36);
+          color:white;
+          <#elseif subsidiary.id == "24">
+            background-color:#8daebe;
+          	<#elseif subsidiary.id == "4">
+            background-color:black;
+          	color:white;
+          <#elseif subsidiary.id == "2">
+            background-color:rgb(255, 199, 38);
+          	color:white;
+            <#elseif subsidiary.id == "6">
+            background-color:#ab9787;
+            <#elseif subsidiary.id == "8">
+            background-color:#8daebe;
+            <#elseif subsidiary.id == "7">
+            background-color:#0077b3;
+          	color:white;
+          <#elseif subsidiary.id == "9">
+            background-color:#0077b3;
+          	color:white;
+            <#elseif subsidiary.id == "1">
+            background-color:#9e9e9e;
+            <#else></#if>
+        }
+      	td.address{
+          	width:20%;
+        }
+      	td.logo{
+          	width:28%;
+        }
+      	td.head1{
+          	width: 16%;
+          	font-weight: bold;
+          	font-size: 8pt;
+          	padding-top: 6px;
+            padding-bottom: 2px;
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-left-color: white;
+          	border-right-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+      	td.head2{
+          	width: 28%;
+          	font-size: 8pt;
+          	padding-top: 6px;
+            padding-bottom: 2px;
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-right-color: white;
+          	border-left-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+        table.footer td {
+            padding: 0;
+            font-size: 8pt;
+        }
+        table.itemtable th {
+            padding-bottom: 10px;
+            padding-top: 10px;
+			border: 0.01px solid #9e9e9e;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.total {
+            page-break-inside: avoid;
+        }
+        tr.totalrow {
+            background-color: #e3e3e3;
+            line-height: 200%;
+        }
+        td.totalboxtop {
+            font-size: 12pt;
+            background-color: #e3e3e3;
+        }
+      	td.addressheader {
+            font-size: 8pt;
+            padding: 12px;
+            background-color: #f1f1f1;
+          	height: 95px;
+        }
+        td.totalboxmid {
+            font-size: 28pt;
+            padding-top: 20px;
+            background-color: #e3e3e3;
+        }
+        td.totalboxbot {
+            background-color: #e3e3e3;
+            font-weight: bold;
+        }
+        th.itemname{
+          	border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td.itemname{
+          	border: 1px solid black;
+   			border-collapse: collapse;
+        }
+      	tr.itemline1{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	tr.itemline2{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	td.itemtable2{
+          	border: 0.01px solid #9e9e9e;
+          	text-align: center;
+          	margin-bottom:-10%;
+        }
+      	td.subtotal{
+          	border: 0.01px solid black;
+          	border-collapse: collapse;
+          	font-size: 8pt;
+        }
+      	td.bottomright1{
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-left-color: white;
+          	border-right-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+      	td.bottomright2{
+          	border: 0.01px solid;
+          	border-top-color: #9e9e9e;
+          	border-right-color: white;
+          	border-left-color: #9e9e9e;
+          	border-bottom-color: #9e9e9e;
+        }
+      	td.specialinstruct{
+          	color: #9e9e9e;
+          	border: 0.01px solid #9e9e9e;
+        }
+        span.title {
+            font-size: 28pt;
+        }
+        span.number {
+            font-size: 16pt;
+        }
+        span.itemname {
+            font-weight: bold;
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+      	span.padding{
+          	text-align: left;
+          	color:#4d4d4d;
+        }
+      	span.paddingbold{
+          	text-align: left;
+          	color:#4d4d4d;
+          	font-weight: bold;
+        }
+</style>
+</head>
+<body header="nlheader" header-height="23%" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+    <table class="addressheader" style="width: 100%;"><tr>
+	<td class="addressheader" colspan="1" rowspan="4" style="width: 48%;color:#4d4d4d;"><span class="padding" style="font-weight: bold;">INVOICE TO</span><br /><span>${record.billaddress}</span></td>
+	<td colspan="1" rowspan="4" style="width: 4%;">&nbsp;</td>
+	<td class="addressheader" colspan="1" rowspan="4" style="width: 48%;color:#4d4d4d;"><span class="padding" style="font-weight: bold;">DELIVER TO</span><br /><span><#if record.custbody43 = "Yes">${record.custbody_esm_r_booking.custrecord_able_booking_delilvery_addres} <#else>${record.shipaddress}<br/>${record.shipphone}<br/>${record.shippingaddress.custrecord577} </#if> </span></td>
+	</tr></table>
+
+<table style="width: 100%;"><tr>
+	<td>&nbsp;</td>
+	</tr></table>
+<#if record.item?has_content>
+
+<table style="width: 100%;"><!-- start items --><#list record.item as item><#if item_index==0>
+<thead>
+	<tr class="itemline1">
+	<th class="itemtable1" line-height="150%" width="80px">
+	<p align="center">CODE</p>
+	</th>
+	<th class="itemtable2" line-height="150%" width="210px">
+	<p align="center">DESCRIPTION</p>
+	</th>
+      <th class="itemtable2" line-height="150%" width="75px">
+	<p align="center">QTY</p>
+	</th>
+      
+	
+	<!--  <th align="center" class="itemtable2" line-height="150%" width="70px">
+	<p align="center">QTY INVOICE</p>
+	</th>  -->
+       <!-- <th class="itemtable2" line-height="150%" width="70px">
+	<p align="center">QTY ON BACK ORDER</p>
+	</th>  -->
+	
+	<th align="center" class="itemtable2" line-height="150%" width="70px">
+	<p align="center">UNIT PRICE</p>
+	</th>
+	<th align="center" class="itemtable2" line-height="150%" width="70px">
+	<p align="center">GST</p>
+	</th>
+	<th align="center" class="itemtable3" line-height="150%" width="100px">
+	<p align="center">AMOUNT INC GST</p>
+	</th>
+	</tr>
+</thead>
+</#if><tr class="itemline2">
+	
+  
+  	<#if record.createdfrom.custbody_invoiceterm != 'In Arrears' >
+
+		
+		<td class="itemtable1" width="80px">
+			<#if item.custcol_itemname == 'Go-Live TEMP' >
+				<p align="center">Freight</p>
+			<#else>
+				<p align="center">${item.custcol_itemname}</p>
+			</#if>
+		</td>
+		
+		<td class="itemtable2" width="210px">
+			<#if item.custcol_itemname == 'Go-Live TEMP' >
+				<p align="left">Rental<br />Invoice Period : ${item.custcol_nextinvoicedate} - ${item.custcol_invhireperiod} </p>
+			<#else>
+				<p align="left">${item.description}<br />Invoice Period : ${item.custcol_nextinvoicedate} - ${item.custcol_invhireperiod} </p>
+			</#if>
+		</td>
+    </#if>
+  
+   	<#if record.createdfrom.custbody_invoiceterm = 'In Arrears' >
+		<td class="itemtable1" width="80px">
+			<#if item.custcol_itemname == 'Go-Live TEMP' >
+				<p align="center">Freight</p>
+			<#else>
+				<p align="center">${item.custcol_itemname}</p>
+			</#if>
+		</td>
+
+		<td class="itemtable2" width="210px">
+
+			<#if item.custcol_itemname == 'Go-Live TEMP' >
+				<p align="left">Rental<br />Invoice Period : ${item.custcol_invhireperiod} - ${item.custcol_nextinvoicedate}  </p>
+			<#else>
+				<p align="left">${item.description}<br />Invoice Period : ${item.custcol_invhireperiod} - ${item.custcol_nextinvoicedate}  </p>
+			</#if>
+			
+		</td>
+    </#if>
+  
+	<td class="itemtable2" width="75px">
+		<p align="center">
+			<#setting number_format=",##0">
+			<#if item.custcol53?has_content>
+				${item.custcol53}
+			<#else>
+				<#if item.quantity?string != "0" && item.quantity?has_content>
+					${item.quantity}
+				<#else>
+					${item.quantityremaining}
+				</#if>
+			</#if>
+		</p>
+	</td>
+	
+	<!--   <td class="itemtable2" width="70px">
+	<p align="center"><#setting number_format=",##0">${item.createdfrom.quantity} </p>
+	</td> -->
+  
+   <!-- <td class="itemtable2" width="70px">
+	<p align="center"><#setting number_format=",##0">${item.custcol54}</p>
+	</td>   -->
+	
+	<td class="itemtable2" width="70px">
+	<p align="center"><#setting number_format=",##0.00">$${item.rate}</p>
+	</td>
+	<td class="itemtable2" width="70px">
+	<p align="right"><#setting number_format=",##0.00">$${item.rate*item.taxrate1}</p>
+	</td>
+	<td class="itemtable3" width="100px">
+	<p align="right"><#setting number_format=",##0.00">$${item.grossamt}</p>
+	</td>
+	</tr>
+	</#list><!-- end items --></table>
+</#if><#if record.expense?has_content></#if>
+
+<table align="right" class="subtotal" style="width:39%;"><tr>
+	<td align="right" class="subtotal" width="121px">
+	<p style="font-weight: bold;">SUB TOTAL:</p>
+	</td>
+	<td align="right" class="subtotal">${record.subtotal}</td>
+	</tr>
+	<tr>
+	<td align="right" class="subtotal">
+	<p style="font-weight: bold;">${record.taxtotal@label}</p>
+	</td>
+	<td align="right" class="subtotal">${record.taxtotal}</td>
+	</tr>
+	<tr>
+	<td align="right" class="subtotal">
+	<p style="font-weight: bold;">TOTAL:</p>
+	</td>
+	<td align="right" class="subtotal">${record.total}</td>
+	</tr>
+	<tr>
+	<td align="right" class="subtotal">
+	<p style="font-weight: bold;">AMOUNT DUE:</p>
+	</td>
+	<td align="right" class="subtotal">${record.amountremaining}</td>
+	</tr></table>
+&nbsp;
+
+<table align="left" class="bottomleft" height="30"><tr>
+	<td class="address" colspan="1" rowspan="6">Thank you, we appreciate your business. All goods on this tax invoice remain the property of ${subsidiary.legalname} until payment is received in full. Requests for returns and credits must be made within 7 days of delivery. A restocking fee of 15% of order value or $35.00, whichever amount is greater will apply to all returns. Special non-stock orders and custom products are non-returnable. Copies of our Terms and Conditions are available on request.<br />&nbsp;</td>
+	</tr></table>
+
+<p><span style="font-size:13px;"><b>FOR EFT / DIRECT DEBIT PAYMENTS:</b></span></p>
+
+  <#if record.currency != "US Dollar">
+    <span style="font-size:11px;">Account Name: <b>${subsidiary.legalname}</b></span><br /><span style="font-size:11px;">BSB No: <b>${subsidiary.custrecord_bsb}</b></span><br /><span style="font-size:11px;">Account No: <b>${subsidiary.custrecord_account}</b></span><br /><br />
+    </#if>
+  <#if record.currency = "US Dollar">
+    <span style="font-size:11px;">Account Name: <b>${subsidiary.legalname}</b></span><br /><span style="font-size:11px;">BSB No: <b>${subsidiary.custrecord_us_bsb}</b></span><br /><span style="font-size:11px;">Account No: <b>${subsidiary.custrecord_us_account}</b></span><br /><br />
+    </#if>
+  
+  
+ <#if record.subsidiary = "Care Quip"><span style="font-size:11px;">A surcharge of 1% applies to all Visa and MasterCard payments.</span><#else>
+  <span style="font-size:11px;">We accept Visa and MasterCard. No additional surcharges apply.</span>
+  </#if>
+<table class="specialinstruct" style="width:100%; height:60px;"><tr>
+	<td class="specialinstruct"><span style="color:#4d4d4d; font-weight: bold; font-size: 8pt;">SPECIAL INSTRUCTIONS: &nbsp;&nbsp;</span><br /><br />${record.createdfrom}<br /><span style="color:#4d4d4d; font-size: 8pt;">${record.message}</span><br />&nbsp;</td>
+	</tr></table>
+&nbsp;
+</body>
+</pdf>
